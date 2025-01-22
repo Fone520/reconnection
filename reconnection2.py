@@ -112,17 +112,18 @@ class Reconnection(Plugin):
 
     def test_reconnection_api(self):
         """测试重连接口"""
+        logger.info(f"[Reconnection] test api")
         try:
             result = self.client.reconnection(
                 conf().get("gewechat_app_id")
             )
             if result.get('ret') == 200:
-                logger.info(f"[Reconnection] 重连成功")
+                logger.info(f"[Reconnection] 设备掉线，重连成功")
         except Exception as e:
-            if "无需重连" in str(e):
-                logger.info(f"[Reconnection] 重连接口正常")
+            if "无需重连" not in str(e):
+                logger.error(f"[Reconnection] api error: {e}")
             else:
-                logger.error(f"[Reconnection] 重连接口异常: {e}")                
+                logger.info(f"[Reconnection] api ok")                    
 
     def _timer_loop(self):
         """定时器循环"""
